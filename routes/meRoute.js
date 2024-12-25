@@ -26,6 +26,21 @@ router.route("/playlists")
     let headers={"Authorization":`Bearer ${req.session.accessToken}`};
     let result=await axios.get(`https://api.spotify.com/v1/me/playlists?limit=${limit}&offset=${offset}`,{headers});
     res.json(result.data);
+}));
+
+router.route("/albums")
+.get(isLogined,wrapAsync(async(req,res,next)=>{
+    let {limit=10,offset=0}=req.query;
+    let headers={"Authorization":`Bearer ${req.session.accessToken}`};
+    let result=await axios.get(`https://api.spotify.com/v1/me/albums?limit=${limit}&offset=${offset}`,{headers});
+    res.json(result.data);
+}))
+.put(isLogined,wrapAsync(async(req,res,next)=>{
+    let headers={"Authorization":`Bearer ${req.session.accessToken}`};
+    let {ids}=req.query;
+    let idsArray=ids.split(",");
+    let result=await axios.put(`https://api.spotify.com/v1/me/albums`,{ids:idsArray},{headers});
+    res.json(result.data);
 }))
 
 router.route("/top/:type")

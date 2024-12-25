@@ -7,6 +7,8 @@ const axios = require('axios');
 const mongoStore=require("connect-mongo");
 const qs = require('qs'); // To format data for x-www-form-urlencoded
 const mongoose=require("mongoose");
+const methodOverride=require("method-override");
+app.use(methodOverride("_method"));
 const { existsAccessToken, isLogined, saveRedirectUrl } = require('./utils/middlewares');
 const { wrapAsync, ExpressError } = require('./utils/utils');
 

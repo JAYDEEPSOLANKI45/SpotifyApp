@@ -102,3 +102,5 @@ build/Release
 
 # Coveralls reports
 .coverage_report/
+
+temp.html
