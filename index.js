@@ -18,6 +18,7 @@ const userRoute=require("./routes/userRoute");
 const playlistRoute=require("./routes/playlistRoute");
 const albumRoute=require("./routes/albumRoute");
 const browseRoute=require("./routes/browseRoute");
+const artistRoute=require("./routes/artistRoute");
 
 async function main()
 {
@@ -109,6 +110,7 @@ app.use("/users", userRoute);
 app.use("/playlists",playlistRoute);
 app.use("/albums",albumRoute);
 app.use("/browse",browseRoute);
+app.use("/artists",artistRoute);
 
 // app.get("/error",(req,res)=>{
 //     res.send("error");

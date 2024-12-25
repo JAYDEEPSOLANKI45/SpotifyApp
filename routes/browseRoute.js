@@ -12,4 +12,19 @@ router.route("/new-releases")
         res.json(result.data);
 }));
 
+router.route("/categories")
+.get(isLogined,wrapAsync(async(req,res,next)=>{
+        let headers={"Authorization":`Bearer ${req.session.accessToken}`};
+        let result=await axios.get(`https://api.spotify.com/v1/browse/categories`,{headers});
+        res.json(result.data);
+}));
+
+router.route("/categories/:category_id")
+.get(isLogined,wrapAsync(async(req,res,next)=>{
+        let {category_id}=req.params;
+        let headers={"Authorization":`Bearer ${req.session.accessToken}`};
+        let result=await axios.get(`https://api.spotify.com/v1/browse/categories/${category_id}`,{headers});
+        res.json(result.data);
+}));
+
 module.exports=router;
