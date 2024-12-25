@@ -78,4 +78,70 @@ router.route("/top/:type")
     }
 }));
 
+
+//player information
+router.route("/player")
+.get(isLogined,wrapAsync(async(req,res,next)=>{
+    let headers={"Authorization":`Bearer ${req.session.accessToken}`};
+    let result=await axios.get(`https://api.spotify.com/v1/me/player`,{headers});
+    res.json(result.data);
+}));
+
+router.route("/player/devices")
+.get(isLogined,wrapAsync(async(req,res,next)=>{
+    let headers={"Authorization":`Bearer ${req.session.accessToken}`};
+    let result=await axios.get(`https://api.spotify.com/v1/me/player/devices`,{headers});
+    res.json(result.data);
+}));
+
+router.route("/player/currently-playing")
+.get(isLogined,wrapAsync(async(req,res,next)=>{
+    let headers={"Authorization":`Bearer ${req.session.accessToken}`};
+    let result=await axios.get(`https://api.spotify.com/v1/me/player/currently-playing`,{headers});
+    res.json(result.data);
+}));
+
+router.route("/player/recently-played")
+.get(isLogined,wrapAsync(async(req,res,next)=>{
+    let {limit=5,offset=0}=req.query;
+    // let date=new Date();
+    // const unixTimeStamp=date.getTime();
+    let headers={"Authorization":`Bearer ${req.session.accessToken}`};
+    let result=await axios.get(`https://api.spotify.com/v1/me/player/recently-played?limit=${limit}`,{headers});
+    res.json(result.data);
+}));
+
+//start/resume
+//first check if the player is active, otherwise it will give error
+// //only works for the PREMIUM USERS
+// router.route("/player/play")
+// .get(isLogined, wrapAsync(async (req, res, next) => {
+//     let headers = { "Authorization": `Bearer ${req.session.accessToken}` };
+
+//     try {
+//         let result = await axios.get(`https://api.spotify.com/v1/me/player`, { headers });
+//         let device_id = result.data.device.id;
+//         let context_uri = result.data.context.uri;
+//         let offset = { position: 1 };
+
+//         result = await axios.put(
+//             `https://api.spotify.com/v1/me/player/play?device_id=${device_id}`,
+//             { context_uri, offset, position_ms: 0 },
+//             { headers }
+//         );
+//         res.json(result.data);
+//     } catch (error) {
+//         console.error('Error controlling playback:', error.message);
+//         if (error.response) {
+//             console.error('Response status:', error.response.status);
+//             console.error('Response data:', error.response.data);
+//             return next(new ExpressError(error.response.status, error.response.data.error.message));
+//         } else {
+//             return next(new ExpressError(500, "Internal Server Error"));
+//         }
+//     }
+// }));
+
+
+
 module.exports=router;

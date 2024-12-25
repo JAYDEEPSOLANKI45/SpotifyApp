@@ -47,7 +47,7 @@ router.route("/:playlist_id/tracks")
     let {limit=10,offset=0}=req.query;
     let headers={ "Authorization":`Bearer ${req.session.accessToken}` }
     let result=await axios.get(`https://api.spotify.com/v1/playlists/${playlist_id}/tracks?limit=${limit}&offset=${offset}`,{headers});
-    res.json(result);
+    res.json(result.data);
 }))
 .post(isLogined,wrapAsync(async(req,res,next)=>{
     //handle otherwise in frontend
@@ -57,7 +57,7 @@ router.route("/:playlist_id/tracks")
     let headers={"Authorization":`Bearer ${req.session.accessToken}`};
     //req.body contains A JSON array of the Spotify URIs
     let result=await axios.post(`https://api.spotify.com/v1/playlists/${playlist_id}/tracks`,req.body,{headers});
-    res.json(result);
+    res.json(result.data);
 }))
 .delete(isLogined,wrapAsync(async(req,res,next)=>{
     if(!req.body)
