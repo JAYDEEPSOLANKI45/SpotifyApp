@@ -13,6 +13,7 @@ router.route("/:playlist_id/images")
     let result=await axios.get(`https://api.spotify.com/v1/playlists/${playlist_id}/images`,{headers});
     res.json(result.data);
 }))
+//TODO- testing is not done for this
 .put(isLogined,wrapAsync(async (req,res,next)=>{
     if(!req.body)
         return next(new ExpressError(400,"Bad request"));
@@ -66,5 +67,29 @@ router.route("/:playlist_id/tracks")
     //req.body contains A JSON array of the Spotify URIs
     let headers={"Authorization":`Bearer ${req.session.accessToken}`};
 }));
+
+router.route("/:playlist_id/followers")
+.put(isLogined,wrapAsync(async(req,res,next)=>{
+    let {playlist_id}=req.params;
+    let headers={ "Authorization":`Bearer ${req.session.accessToken}` }
+    //true or false
+    let {public}=req.body;
+    let result=await axios.put(`https://api.spotify.com/v1/playlists/${playlist_id}/followers`,{public},{headers});
+    res.json(result.data);
+}))
+.delete(isLogined,wrapAsync(async(req,res,next)=>{
+    let {playlist_id}=req.params;
+    let headers={ "Authorization":`Bearer ${req.session.accessToken}` }
+    let result=await axios.delete(`https://api.spotify.com/v1/playlists/${playlist_id}/followers`,{headers});
+    res.json(result.data);
+}));
+
+router.route("/:playlist_id/followers/contains")
+.get(isLogined,wrapAsync(async(req,res,next)=>{
+    let {playlist_id}=req.params;
+    let headers={ "Authorization":`Bearer ${req.session.accessToken}` }
+    let result=await axios.get(`https://api.spotify.com/v1/playlists/${playlist_id}/followers/contains`,{headers});
+    res.json(result.data);
+}))
 
 module.exports=router;

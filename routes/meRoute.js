@@ -78,7 +78,6 @@ router.route("/top/:type")
     }
 }));
 
-
 //player information
 router.route("/player")
 .get(isLogined,wrapAsync(async(req,res,next)=>{
@@ -110,6 +109,40 @@ router.route("/player/recently-played")
     let result=await axios.get(`https://api.spotify.com/v1/me/player/recently-played?limit=${limit}`,{headers});
     res.json(result.data);
 }));
+
+router.route("/following/contains")
+.get(isLogined,wrapAsync(async(req,res,next)=>{
+    let headers={"Authorization":`Bearer ${req.session.accessToken}`};
+    let {type,ids}=req.query;
+    let result=await axios.get(`https://api.spotify.com/v1/me/following/contains?type=${type}&ids=${ids}`,{headers});
+    res.json(result.data);
+}))
+
+router.route("/following")
+.get(isLogined,wrapAsync(async(req,res,next)=>{
+    let headers={"Authorization":`Bearer ${req.session.accessToken}`};
+    let result=await axios.get(`https://api.spotify.com/v1/me/following?type=artist`,{headers});
+    res.json(result.data);
+}))
+//TODO: testing to be done
+.put(isLogined,wrapAsync(async(req,res,next)=>{
+    let headers={"Authorization":`Bearer ${req.session.accessToken}`};
+    let {type}=req.query;
+    //TODO: server side validation needed
+    let {ids}=req.body;
+    let result=await axios.put(`https://api.spotify.com/v1/me/following?type=${type}&ids=${ids}`,{ids},{headers});
+    res.json(result.data);
+}))
+//TODO: testing to be done
+.delete(isLogined,wrapAsync(async(req,res,next)=>{
+    let headers={"Authorization":`Bearer ${req.session.accessToken}`};
+    let {type}=req.query;
+    //TODO: server side validation needed
+    let {ids}=req.body;
+    let result=await axios.delete(`https://api.spotify.com/v1/me/following?type=${type}&ids=${ids}`,{headers, data:{ids}});
+    res.json(result.data);
+}));
+
 
 //start/resume
 //first check if the player is active, otherwise it will give error
