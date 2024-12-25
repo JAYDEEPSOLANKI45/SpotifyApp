@@ -42,12 +42,29 @@ router.route("/albums")
     let result=await axios.put(`https://api.spotify.com/v1/me/albums`,{ids:idsArray},{headers});
     res.json(result.data);
 }))
+.delete(isLogined,wrapAsync(async(req,res,next)=>{
+    let {ids}=req.query;
+    let headers={"Authorization":`Bearer ${req.session.accessToken}`};
+    let idsArray=ids.split(",");
+    //axios.delete takes parameteres differently than other methods
+    let result=await axios.delete(`https://api.spotify.com/v1/me/albums`,{headers,data:{ids:idsArray}});
+    res.json(result.data);
+}));
+
+//check if the user has saved those albums
+router.route("/albums/contains")
+.get(isLogined,wrapAsync(async(req,res,next)=>{
+    let {ids}=req.query;
+    let headers={"Authorization":`Bearer ${req.session.accessToken}`};
+    let result=await axios.get(`https://api.spotify.com/v1/me/albums/contains?ids=${ids}`,{headers});
+    res.json(result.data);
+}))
+
 
 router.route("/top/:type")
 .get(isLogined, wrapAsync(async (req, res, next) => {
     let { limit=5, offset=0 }=req.query;
     let {type} = req.params;
-    console.log(type);
     if(!(type=='tracks' || type=='artists'))
         return next(new ExpressError(400,"Not a valid type"));
     const accessToken = req.session.accessToken;
