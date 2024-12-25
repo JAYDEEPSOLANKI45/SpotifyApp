@@ -14,7 +14,7 @@ const { wrapAsync, ExpressError } = require('./utils/utils');
 const meRouter=require("./routes/meRoute");
 const userRoute=require("./routes/userRoute");
 const playlistRoute=require("./routes/playlistRoute");
-
+const albumRoute=require("./routes/albumRoute");
 
 async function main()
 {
@@ -27,13 +27,13 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        maxAge: 24 * 3600 * 1000,
+        maxAge:3600 * 1000,
         httpOnly: true
     },
     store:mongoStore.create({
         crypto:process.env.SECRET,
         mongoUrl:process.env.MONGODB_URI,
-        touchAfter:24*3600
+        touchAfter:3600
     })
 }));
 
@@ -91,7 +91,6 @@ app.get('/login/code', wrapAsync(async (req, res) => {
         const result = await axios.post("https://accounts.spotify.com/api/token", data, { headers });
         const accessToken = result.data.access_token;
         req.session.accessToken = accessToken;
-        console.log(req.session.accessToken);
         let redirectUrl= req.session.redirectUrl || "home";
         delete req.session.redirect;
         console.log(redirectUrl);
@@ -105,7 +104,7 @@ app.get('/login/code', wrapAsync(async (req, res) => {
 app.use("/me", meRouter);
 app.use("/users", userRoute);
 app.use("/playlists",playlistRoute);
-
+app.use("/albums",albumRoute);
 
 // app.get("/error",(req,res)=>{
 //     res.send("error");

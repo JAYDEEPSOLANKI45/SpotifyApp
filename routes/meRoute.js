@@ -20,6 +20,14 @@ router.route("/")
     }
 }));
 
+router.route("/playlists")
+.get(isLogined,wrapAsync(async(req,res,next)=>{
+    let {limit=10,offset=0}=req.query;
+    let headers={"Authorization":`Bearer ${req.session.accessToken}`};
+    let result=await axios.get(`https://api.spotify.com/v1/me/playlists?limit=${limit}&offset=${offset}`,{headers});
+    res.json(result.data);
+}))
+
 router.route("/top/:type")
 .get(isLogined, wrapAsync(async (req, res, next) => {
     let { limit=5, offset=0 }=req.query;
