@@ -2,14 +2,19 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 const dotenv = require('dotenv');
+dotenv.config();
 const axios = require('axios');
 const mongoStore=require("connect-mongo");
 const qs = require('qs'); // To format data for x-www-form-urlencoded
 const mongoose=require("mongoose");
 const { existsAccessToken, isLogined, saveRedirectUrl } = require('./utils/middlewares');
-const { wrapAsync } = require('./utils/utils');
-const ExpressError = require('./utils/utils');
-dotenv.config();
+const { wrapAsync, ExpressError } = require('./utils/utils');
+
+//routes
+const meRouter=require("./routes/meRoute");
+const userRoute=require("./routes/userRoute");
+const playlistRoute=require("./routes/playlistRoute");
+
 
 async function main()
 {
@@ -70,7 +75,7 @@ app.get('/login',saveRedirectUrl, (req, res) => {
 
 });
 
-app.get('/', wrapAsync(async (req, res) => {
+app.get('/login/code', wrapAsync(async (req, res) => {
     req.session.authorizationCode = req.query.code;
     const data = qs.stringify({
         code: req.query.code,
@@ -96,45 +101,20 @@ app.get('/', wrapAsync(async (req, res) => {
     }
 }));
 
-// Route to show account information
-app.get('/me',isLogined, wrapAsync( async (req, res) => {
-    const accessToken = req.session.accessToken;
-    const headers = { 'Authorization': `Bearer ${accessToken}` };
-    try {
-        const response = await axios.get('https://api.spotify.com/v1/me', { headers });
-        res.json(response.data);
-    } catch (error) {
-        console.error('Error:', error.message);
-        if (error) {
-            return next(new ExpressError(400,"Bad request"));
-        }
-    }
-}));
 
-//limit
-app.get('/me/top-tracks', isLogined, wrapAsync(async (req, res) => {
-    let { limit=5 }=req.query;
-    const accessToken = req.session.accessToken;
-    const headers = { 'Authorization': `Bearer ${accessToken}` };
+app.use("/me", meRouter);
+app.use("/users", userRoute);
+app.use("/playlists",playlistRoute);
 
-    try {
-        const response = await axios.get(`https://api.spotify.com/v1/me/top/tracks?limit=${limit}`, { headers });
-        console.log('Top 5 Tracks:', response.data.items);
-        res.json(response.data.items);
-    } catch (error) {
-        console.log(error)
-        return next(new ExpressError(400,"Bad request"));
-    }
-}));
 
-app.get("/error",(req,res)=>{
-    res.send("error");
-});
+// app.get("/error",(req,res)=>{
+//     res.send("error");
+// });
 
-app.use((err,req,res,next)=>{
-    let {status=500,message="Something broke!"}=err;
-    res.redirect("/error");
-})
+// app.use((err,req,res,next)=>{
+//     let {status=500,message="Something broke!"}=err;
+//     res.redirect("/error");
+// });
 
 app.listen(8080, () => {
     console.log('Listening on port 8080');
