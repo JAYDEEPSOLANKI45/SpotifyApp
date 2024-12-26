@@ -104,3 +104,4 @@ build/Release
 .coverage_report/
 
 temp.html
+images/

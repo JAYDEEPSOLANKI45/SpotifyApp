@@ -10,7 +10,9 @@ const mongoose=require("mongoose");
 const methodOverride=require("method-override");
 app.use(methodOverride("_method"));
 const { existsAccessToken, isLogined, saveRedirectUrl } = require('./utils/middlewares');
-const { wrapAsync, ExpressError } = require('./utils/utils');
+const { wrapAsync } = require('./utils/utils');
+const User=require("./models/userModel");
+const ExpressError=require("./utils/ExpressError");
 
 //routes
 const meRouter=require("./routes/meRoute");
@@ -20,6 +22,10 @@ const albumRoute=require("./routes/albumRoute");
 const browseRoute=require("./routes/browseRoute");
 const artistRoute=require("./routes/artistRoute");
 const trackRoute=require("./routes/trackRoute");
+const loginRoute=require("./routes/loginRoute");
+
+const passport = require('passport');
+const LocalStrategy=require("passport-local");
 
 async function main()
 {
@@ -52,69 +58,17 @@ app.use("/albums",albumRoute);
 app.use("/browse",browseRoute);
 app.use("/artists",artistRoute);
 app.use("/tracks",trackRoute);
-
-app.get("/home",(req,res)=>{
-    res.send("home");
-})
-// Route to redirect user to Spotify authorization page with scopes
-app.get('/login',saveRedirectUrl, (req, res) => {
-    const scope = `
-        user-read-private
-        user-read-email
-        user-library-read
-        user-library-modify
-        playlist-read-private
-        playlist-read-collaborative
-        playlist-modify-public
-        playlist-modify-private
-        user-top-read
-        user-read-recently-played
-        user-follow-read
-        user-follow-modify
-        app-remote-control
-        streaming
-        user-read-playback-state
-        user-modify-playback-state
-        user-read-currently-playing
-        user-read-playback-position
-        ugc-image-upload
-        `.replace(/\s+/g, ' ').trim();
-
-    res.redirect('https://accounts.spotify.com/authorize' +
-        '?response_type=code' +
-        '&client_id=' + process.env.CLIENT_ID +
-        '&scope=' + encodeURIComponent(scope) +
-        '&redirect_uri=' + encodeURIComponent(process.env.REDIRECT_URL));
-
-});
-
-app.get('/login/code', wrapAsync(async (req, res) => {
-    req.session.authorizationCode = req.query.code;
-    const data = qs.stringify({
-        code: req.query.code,
-        redirect_uri: process.env.REDIRECT_URL,
-        grant_type: 'authorization_code'
-    });
-    const headers = {
-        'content-type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Basic ' + Buffer.from(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64')
-    };
-
-    try {
-        const result = await axios.post("https://accounts.spotify.com/api/token", data, { headers });
-        const accessToken = result.data.access_token;
-        req.session.accessToken = accessToken;
-        let redirectUrl= req.session.redirectUrl || "home";
-        delete req.session.redirect;
-        console.log(redirectUrl);
-        res.redirect(redirectUrl);
-    } catch (error) {
-        return next(new ExpressError(400,"Bad request"));
-    }
-}));
+app.use("/login",loginRoute);
 
 
+//passport
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
+//TODO: error handling middleware
 
 // app.get("/error",(req,res)=>{
 //     res.send("error");
