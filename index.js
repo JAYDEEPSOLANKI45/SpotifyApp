@@ -23,6 +23,7 @@ const browseRoute=require("./routes/browseRoute");
 const artistRoute=require("./routes/artistRoute");
 const trackRoute=require("./routes/trackRoute");
 const loginRoute=require("./routes/loginRoute");
+const searchRoute=require("./routes/searchRoutes");
 
 const passport = require('passport');
 const LocalStrategy=require("passport-local");
@@ -59,6 +60,7 @@ app.use("/browse",browseRoute);
 app.use("/artists",artistRoute);
 app.use("/tracks",trackRoute);
 app.use("/login",loginRoute);
+app.use("/search", searchRoute);
 
 
 //passport
