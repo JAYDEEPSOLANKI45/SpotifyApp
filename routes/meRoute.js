@@ -143,6 +143,90 @@ router.route("/following")
     res.json(result.data);
 }));
 
+//TODO: testing
+//liked songs
+router.route("/me/tracks")
+.get(isLogined, wrapAsync(async (req, res, next) => {
+    //limit 50
+    let { limit = 20, offset = 0 } = req.query;
+    let headers = { "Authorization": `Bearer ${req.session.accessToken}` };
+
+    try {
+        let result = await axios.get(`https://api.spotify.com/v1/me/tracks?limit=${limit}&offset=${offset}`, { headers });
+        res.json(result.data);
+    } catch (error) {
+        console.error('Error fetching saved tracks:', error.message);
+        if (error.response) {
+            console.error('Response status:', error.response.status);
+            console.error('Response data:', error.response.data);
+            return next(new ExpressError(error.response.status, error.response.data.error.message));
+        } else {
+            return next(new ExpressError(500, "Internal Server Error"));
+        }
+    }
+}))
+.put(isLogined, wrapAsync(async (req, res, next) => {
+    let { ids } = req.body; // An array of track IDs
+    let headers = { "Authorization": `Bearer ${req.session.accessToken}` };
+    
+    try {
+        let result = await axios.put(`https://api.spotify.com/v1/me/tracks`, { ids }, { headers });
+        res.json(result.data);
+    } catch (error) {
+        console.error('Error saving tracks:', error.message);
+        if (error.response) {
+            console.error('Response status:', error.response.status);
+            console.error('Response data:', error.response.data);
+            return next(new ExpressError(error.response.status, error.response.data.error.message));
+        } else {
+            return next(new ExpressError(500, "Internal Server Error"));
+        }
+    }
+}))
+.delete(isLogined, wrapAsync(async (req, res, next) => {
+    let { ids } = req.body; // An array of track IDs
+    let headers = { "Authorization": `Bearer ${req.session.accessToken}` };
+    
+    try {
+        let result = await axios.delete(`https://api.spotify.com/v1/me/tracks`, {
+            headers,
+            data: { ids }
+        });
+        res.json(result.data);
+    } catch (error) {
+        console.error('Error removing saved tracks:', error.message);
+        if (error.response) {
+            console.error('Response status:', error.response.status);
+            console.error('Response data:', error.response.data);
+            return next(new ExpressError(error.response.status, error.response.data.error.message));
+        } else {
+            return next(new ExpressError(500, "Internal Server Error"));
+        }
+    }
+}));
+
+//to check if the user has saved those tracks
+router.route("/tracks/contains")
+.get(isLogined, wrapAsync(async (req, res, next) => {
+    let { ids } = req.query; // A comma-separated list of track IDs
+    let headers = { "Authorization": `Bearer ${req.session.accessToken}` };
+    
+    try {
+        let result = await axios.get(`https://api.spotify.com/v1/me/tracks/contains?ids=${ids}`, { headers });
+        res.json(result.data);
+    } catch (error) {
+        console.error('Error checking saved tracks:', error.message);
+        if (error.response) {
+            console.error('Response status:', error.response.status);
+            console.error('Response data:', error.response.data);
+            return next(new ExpressError(error.response.status, error.response.data.error.message));
+        } else {
+            return next(new ExpressError(500, "Internal Server Error"));
+        }
+    }
+}));
+
+
 
 //start/resume
 //first check if the player is active, otherwise it will give error

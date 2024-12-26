@@ -19,6 +19,7 @@ const playlistRoute=require("./routes/playlistRoute");
 const albumRoute=require("./routes/albumRoute");
 const browseRoute=require("./routes/browseRoute");
 const artistRoute=require("./routes/artistRoute");
+const trackRoute=require("./routes/trackRoute");
 
 async function main()
 {
@@ -43,6 +44,14 @@ app.use(session({
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+app.use("/me", meRouter);
+app.use("/users", userRoute);
+app.use("/playlists",playlistRoute);
+app.use("/albums",albumRoute);
+app.use("/browse",browseRoute);
+app.use("/artists",artistRoute);
+app.use("/tracks",trackRoute);
 
 app.get("/home",(req,res)=>{
     res.send("home");
@@ -105,12 +114,7 @@ app.get('/login/code', wrapAsync(async (req, res) => {
 }));
 
 
-app.use("/me", meRouter);
-app.use("/users", userRoute);
-app.use("/playlists",playlistRoute);
-app.use("/albums",albumRoute);
-app.use("/browse",browseRoute);
-app.use("/artists",artistRoute);
+
 
 // app.get("/error",(req,res)=>{
 //     res.send("error");
