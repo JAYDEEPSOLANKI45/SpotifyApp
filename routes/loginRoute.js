@@ -61,13 +61,10 @@ router.get('/code', wrapAsync(async (req, res,next) => {
 
         const meHeaders = { "Authorization": `Bearer ${accessToken}` };
         const me=await axios.get("https://api.spotify.com/v1/me",{headers:meHeaders});
-        const following=await axios.get("https://api.spotify.com/v1/me/following?type=artist",{headers:meHeaders});
-        console.log("Hey");
-        console.log(following.data.artists.items);
+        req.session.accountId=me.data.id;
         const user=await User.find({username:me.data.id});
         if(user.length==0)
         {
-            console.log("Hey");
             const newUser=await User({username:me.data.id,name:me.data.display_name,email:me.data.email,url:me.data.href});
             await newUser.save();
             console.log("user saved");

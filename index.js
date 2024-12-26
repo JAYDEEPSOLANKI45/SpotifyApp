@@ -52,6 +52,7 @@ app.use(session({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+//spotify web api routes
 app.use("/me", meRouter);
 app.use("/users", userRoute);
 app.use("/playlists",playlistRoute);
@@ -61,6 +62,8 @@ app.use("/artists",artistRoute);
 app.use("/tracks",trackRoute);
 app.use("/login",loginRoute);
 app.use("/search", searchRoute);
+
+//custom routes
 
 
 //passport

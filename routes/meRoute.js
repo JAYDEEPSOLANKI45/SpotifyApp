@@ -4,6 +4,7 @@ const { wrapAsync } = require("../utils/utils");
 const axios = require("axios");
 const ExpressError=require("../utils/ExpressError");
 const router=express.Router();
+const User=require("../models/userModel");
 
 router.route("/")
 .get(isLogined, wrapAsync( async (req, res,next) => {
@@ -227,6 +228,28 @@ router.route("/tracks/contains")
 }));
 
 
+//custom routes
+router.route("/friends")
+//TODO: make it post and send friends id inside req body
+.post(isLogined,wrapAsync(async(req,res,next)=>{
+    let {friend_id}=req.body;
+    try{
+        let user=await User.findOne({username:req.session.accountId});
+        if (!user) { return next(new ExpressError(404, "User not found")); }
+        console.log(user);
+        if (user.friends.includes(friend_id)) { return res.status(400).json({ message: "Friend already exists in the list" }); }
+
+        //currently save any user id as their friend but later the usr can check if their friend is on the platform or not
+        user.friends.push(friend_id);
+        console.log(user);
+        await user.save();
+        res.status(200).json({ message: "Friend added successfully" });
+    }
+    catch(err)
+    {
+        return next(new ExpressError(400,"Bad request"));
+    }
+}));
 
 //start/resume
 //first check if the player is active, otherwise it will give error

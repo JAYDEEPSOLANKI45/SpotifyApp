@@ -13,7 +13,7 @@ const userSchema=mongoose.Schema({
     ],
     friends:[
         {
-            type:mongoose.Types.ObjectId
+            type:String
         }
     ]
 });
