@@ -59,7 +59,7 @@ router.route("/albums/contains")
     let headers={"Authorization":`Bearer ${req.session.accessToken}`};
     let result=await axios.get(`https://api.spotify.com/v1/me/albums/contains?ids=${ids}`,{headers});
     res.json(result.data);
-}))
+}));
 
 
 router.route("/top/:type")
@@ -79,7 +79,7 @@ router.route("/top/:type")
     }
 }));
 
-//player information
+//player information create another TODO: route /me/player inside index.js
 router.route("/player")
 .get(isLogined,wrapAsync(async(req,res,next)=>{
     let headers={"Authorization":`Bearer ${req.session.accessToken}`};
@@ -146,7 +146,7 @@ router.route("/following")
 
 //TODO: testing
 //liked songs
-router.route("/me/tracks")
+router.route("/tracks")
 .get(isLogined, wrapAsync(async (req, res, next) => {
     //limit 50
     let { limit = 20, offset = 0 } = req.query;
@@ -230,16 +230,23 @@ router.route("/tracks/contains")
 
 //custom routes
 router.route("/friends")
+.get(isLogined,wrapAsync(async(req,res,next)=>{
+    let user=await User.findOne({username:req.session.accountId});
+    res.status(200).json(user.friends);
+}))
 //TODO: make it post and send friends id inside req body
 .post(isLogined,wrapAsync(async(req,res,next)=>{
+    //TODO: server side validation
     let {friend_id}=req.body;
+    if(!friend_id)
+        res.status(400).send("No user id specified");
     try{
         let user=await User.findOne({username:req.session.accountId});
         if (!user) { return next(new ExpressError(404, "User not found")); }
         console.log(user);
         if (user.friends.includes(friend_id)) { return res.status(400).json({ message: "Friend already exists in the list" }); }
 
-        //currently save any user id as their friend but later the usr can check if their friend is on the platform or not
+        //TODO: currently save any user id as their friend but later the usr can check if their friend is on the platform or not
         user.friends.push(friend_id);
         console.log(user);
         await user.save();
@@ -249,7 +256,17 @@ router.route("/friends")
     {
         return next(new ExpressError(400,"Bad request"));
     }
-}));
+}))
+.delete(isLogined,wrapAsync(async(req,res,next)=>{
+    //TODO: validation
+    let {friend_id}=req.query;
+    let user=await User.findOne({username:req.session.accountId});
+    user.friends.pull(friend_id);
+    await user.save();
+    res.status(200).json(user.friends);
+}))
+
+
 
 //start/resume
 //first check if the player is active, otherwise it will give error

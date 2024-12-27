@@ -69,7 +69,6 @@ router.get('/code', wrapAsync(async (req, res,next) => {
             await newUser.save();
             console.log("user saved");
         }
-        console.log(user);
         console.log(redirectUrl);
         res.redirect(redirectUrl);
     } catch (error) {
