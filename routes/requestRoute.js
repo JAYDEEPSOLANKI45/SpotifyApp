@@ -16,6 +16,7 @@ router.route("/")
     res.status(200).json(request);
 }))
 //TODO:dont let request happen from both the sides. if they try to request back, make them friends
+//TODO: Also dont let anyone send friend request to anyone who is already their friend
 .post(isLogined,wrapAsync(async(req,res,next)=>{
     let {user_id,type}=req.body;
     if(!type || !(type==="friend" || type==="group"))
@@ -55,6 +56,7 @@ router.route("/")
 
     res.status(200).json({message:"Friend added successfully"});
 }))
+//TODO: test
 .delete(isLogined,wrapAsync(async(req,res,next)=>{
     let {request_id}=req.body;
     let user=await User.findOne({username:req.session.accountId});
