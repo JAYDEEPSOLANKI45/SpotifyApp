@@ -56,7 +56,8 @@ router.get('/code', wrapAsync(async (req, res,next) => {
         const result = await axios.post("https://accounts.spotify.com/api/token", data, { headers });
         const accessToken = result.data.access_token;
         req.session.accessToken = accessToken;
-        let redirectUrl= req.session.redirectUrl || "home";
+        //TODO: fix the error
+        let redirectUrl= req.session.redirectUrl || "me";
         delete req.session.redirect;
 
         const meHeaders = { "Authorization": `Bearer ${accessToken}` };

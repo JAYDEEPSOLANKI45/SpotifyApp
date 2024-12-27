@@ -24,6 +24,7 @@ const artistRoute=require("./routes/artistRoute");
 const trackRoute=require("./routes/trackRoute");
 const loginRoute=require("./routes/loginRoute");
 const searchRoute=require("./routes/searchRoutes");
+const requestRoute=require("./routes/requestRoute");
 
 const passport = require('passport');
 const LocalStrategy=require("passport-local");
@@ -53,7 +54,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 //spotify web api routes
-app.use("/me", meRouter);
 app.use("/users", userRoute);
 app.use("/playlists",playlistRoute);
 app.use("/albums",albumRoute);
@@ -62,6 +62,8 @@ app.use("/artists",artistRoute);
 app.use("/tracks",trackRoute);
 app.use("/login",loginRoute);
 app.use("/search", searchRoute);
+app.use("/me/requests",requestRoute);
+app.use("/me", meRouter);
 
 //custom routes
 

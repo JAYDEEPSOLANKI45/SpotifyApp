@@ -19,7 +19,7 @@ router.route("/categories")
         res.json(result.data);
 }));
 
-//send get to href in response and send token as a header
+
 router.route("/categories/:category_id")
 .get(isLogined,wrapAsync(async(req,res,next)=>{
         let {category_id}=req.params;
