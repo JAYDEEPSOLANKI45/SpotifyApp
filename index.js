@@ -71,9 +71,9 @@ app.use("/me", meRouter);
 //passport
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+// passport.use(new LocalStrategy(User.authenticate()));
+// passport.serializeUser(User.serializeUser());
+// passport.deserializeUser(User.deserializeUser());
 
 //TODO: error handling middleware
 
@@ -85,6 +85,12 @@ passport.deserializeUser(User.deserializeUser());
 //     let {status=500,message="Something broke!"}=err;
 //     res.redirect("/error");
 // });
+
+app.use("/logout",isLogined,wrapAsync(async(req,res,next)=>{
+    delete req.session.authorizationCode;
+    delete req.session.accessToken;
+    res.status(200).json({message:"Logged out successfully"});
+}))
 
 app.listen(8080, () => {
     console.log('Listening on port 8080');

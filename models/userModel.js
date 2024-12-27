@@ -1,26 +1,22 @@
 const mongoose=require("mongoose");
-const passportLocalMongoose=require("passport-local-mongoose");
 
 const userSchema=mongoose.Schema({
     username:String,
     name:String,
     email:String,
     url:String,
+    genres:[String],
     groups:[
         {
-            type:mongoose.Types.ObjectId,
+            type:mongoose.Schema.Types.ObjectId,
             ref:"Group"
         }
     ],
-    friends:[
-        {
-            type:String
-        }
-    ],
+    friends:[String],
     //TODO: genres and pending friend requests fields to be added
     groupOwner:[
         {
-            type:mongoose.Types.ObjectId,
+            type:mongoose.Schema.Types.ObjectId,
             ref:"Group"
         }
     ],
@@ -44,5 +40,4 @@ const userSchema=mongoose.Schema({
     ]
 });
 
-userSchema.plugin(passportLocalMongoose);
 module.exports=mongoose.model("MusicUser",userSchema);
