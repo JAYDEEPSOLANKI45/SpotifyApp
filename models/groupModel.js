@@ -16,5 +16,6 @@ const groupSchema=mongoose.Schema({
         }
     ],
     //messages? model
-    // nisarg
 })
+
+module.exports=mongoose.model("Group",groupSchema);
