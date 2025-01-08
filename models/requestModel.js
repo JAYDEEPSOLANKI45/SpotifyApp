@@ -12,7 +12,11 @@ const requestSchema=mongoose.Schema({
         type:mongoose.Types.ObjectId,
         ref:"MusicUser"
     },
-    type:String //friend or group
+    type:String, //friend or group
+    groupId:{
+        type:mongoose.Types.ObjectId,
+        ref:"Group"
+    }
 });
 
 requestSchema.plugin(passportMongooseLocal);

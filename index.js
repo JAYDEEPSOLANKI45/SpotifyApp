@@ -13,6 +13,8 @@ const { existsAccessToken, isLogined, saveRedirectUrl } = require('./utils/middl
 const { wrapAsync } = require('./utils/utils');
 const User=require("./models/userModel");
 const ExpressError=require("./utils/ExpressError");
+const path=require('path');
+
 
 //routes
 const meRouter=require("./routes/meRoute");
@@ -71,6 +73,10 @@ app.use("/me", meRouter);
 //passport
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.set("view engine","ejs");
+app.use(express.static(path.join(__dirname,"public/css")));
+app.use(express.static(path.join(__dirname,"public/js")));
 // passport.use(new LocalStrategy(User.authenticate()));
 // passport.serializeUser(User.serializeUser());
 // passport.deserializeUser(User.deserializeUser());

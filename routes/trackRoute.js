@@ -8,7 +8,7 @@ const router=express.Router();
 //for multiple tracks
 router.route("/")
 .get(isLogined, wrapAsync(async (req, res, next) => {
-    let { ids } = req.query; // A comma-separated list of track IDs
+    let { ids } = req.query; // A comma-separated list of track IDs in base64 format
     let headers = { "Authorization": `Bearer ${req.session.accessToken}` };
     
     try {

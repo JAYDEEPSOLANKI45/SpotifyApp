@@ -5,6 +5,7 @@ const axios = require("axios");
 const ExpressError=require("../utils/ExpressError");
 const router=express.Router();
 const User=require("../models/userModel");
+const Group=require("../models/groupModel");
 
 router.route("/")
 .get(isLogined, wrapAsync( async (req, res,next) => {
@@ -264,7 +265,20 @@ router.route("/friends")
     user.friends.pull(friend_id);
     await user.save();
     res.status(200).json(user.friends);
+}));
+
+router.route("/groups")
+.get(isLogined,wrapAsync(async(req,res,next)=>{
+    let user=await User.findOne({username:req.session.accountId});
+    let groups=await Group.find({owner:user._id});
+    res.status(200).json(groups);
 }))
+.post(isLogined,wrapAsync(async(req,res,next)=>{
+    let {name,description}=req.body;
+    let user=await User.findOne({username:req.session.accountId});
+    let group=new Group({name,description,owner:user._id}); 
+}))
+
 
 
 

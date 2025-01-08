@@ -66,7 +66,13 @@ router.get('/code', wrapAsync(async (req, res,next) => {
         const user=await User.find({username:me.data.id});
         if(user.length==0)
         {
-            const newUser=await User({username:me.data.id,name:me.data.display_name,email:me.data.email,url:me.data.href});
+            //TODO: test the genre part
+            const response = await axios.get(`https://api.spotify.com/v1/me/top/artists?limit=5`, {headers:meHeaders});
+            let genresSet = new Set();
+            for (let artist of response.data.items) 
+                { artist.genres.forEach(genre => genresSet.add(genre)); } // Convert the set back to an array if needed let genres = Array.from
+            let genres = Array.from(genresSet);
+            const newUser=new User({username:me.data.id,name:me.data.display_name,email:me.data.email,url:me.data.href,genres});
             await newUser.save();
             console.log("user saved");
         }

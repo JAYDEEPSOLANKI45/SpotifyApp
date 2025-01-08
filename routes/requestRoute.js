@@ -61,26 +61,40 @@ router.route("/")
 
 //accept the request
 //TODO: accept for the group request
+//TODO: test 
 .put(isLogined,wrapAsync(async(req,res,next)=>{
-    let {request_id}=req.body;
+    let {request_id,group_id=null}=req.body;
     let user=await User.findOne({username:req.session.accountId});
     if (!user) { return res.status(400).json({message:"Login with the valid credentials first"}) }
-    //the other person
     let request=await Request.findByIdAndDelete(request_id);
+    //the other person
     let requestUser=await User.findById(request.from._id);
     if (!requestUser) { return res.status(400).json({message:"The user does not exist"}) }
+
     //remove the requests from both the users
     user.incomingRequests.pull(request._id);
     requestUser.outgoingRequests.pull(request._id);
-    //add each other into their friends list
-    user.friends.push(requestUser._id);
-    requestUser.friends.push(user._id);
-    //save the users back
-    user.save();
-    requestUser.save();
 
-    res.status(200).json({message:"Friend added successfully"});
+    if(request.type=="friend")
+    {
+        //add each other into their friends list
+        user.friends.push(requestUser._id);
+        requestUser.friends.push(user._id);
+        //save the users back
+        user.save();
+        requestUser.save();
+        
+        res.status(200).json({message:"Friend added successfully"});
+    }
+    else
+    {
+        requestUser.groups.push(group_id);
+        let group=await Group.findById(group_id);
+        group.members.push(requestUser._id);
+        res.status(200).json({message:"Member added successfully"});
+    }
 }))
+
 //TODO: test
 .delete(isLogined,wrapAsync(async(req,res,next)=>{
     let {request_id}=req.body;
