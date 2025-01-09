@@ -32,7 +32,10 @@ router.route("/browse")
     const accessToken = req.session.accessToken;
     const headers = { 'Authorization': `Bearer ${accessToken}` };
     try {
-        
+        let headers={"Authorization":`Bearer ${req.session.accessToken}`};
+        let newReleases=await axios.get(`https://api.spotify.com/v1/browse/new-releases`,{headers});
+        let categories=await axios.get(`https://api.spotify.com/v1/browse/categories`,{headers}); 
+        res.render("explore.ejs",{newReleases:newReleases.data,categories:categories.data});
     } catch (error) {
         console.error('Error:', error.message);
         if (error) {

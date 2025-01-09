@@ -7,92 +7,49 @@
     <title>Explore Page</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #1db954, #191414);
-            color: #fff;
-        }
-        .container {
-            max-width: 1100px;
-            margin: 50px auto;
-            padding: 20px;
-            background: #222;
-            border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-        .navbar {
-            text-align: center;
-            padding: 10px;
-            background: #333;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .card {
-            background: #333;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            color: #fff;
-        }
-        .card h2 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-        .card img {
-            width: 100%;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
+    
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="navbar">Explore Page</div>
-
-        <div class="grid">
-            <!-- New Releases -->
-            <div class="card">
-                <h2>New Releases</h2>
-                <% newReleases.albums.items.forEach(album => { %>
-                    <div>
-                        <img src="<%= album.images[0] ? album.images[0].url : 'https://via.placeholder.com/150' %>" alt="Album Cover">
-                        <p><strong><%= album.name %></strong></p>
-                        <p><%= album.artists.map(artist => artist.name).join(', ') %></p>
-                    </div>
-                <% }) %>
-            </div>
-
-            <!-- Browse Categories -->
-            <div class="card">
-                <h2>Browse Categories</h2>
-                <% categories.categories.items.forEach(category => { %>
-                    <div>
-                        <img src="<%= category.icons[0] ? category.icons[0].url : 'https://via.placeholder.com/150' %>" alt="Category Icon">
-                        <p><strong><%= category.name %></strong></p>
-                    </div>
-                <% }) %>
-            </div>
+        <div class="header">
+            <h1>Explore Page</h1>
         </div>
 
-        <!-- User Recommended Categories -->
-        <div class="card">
-            <h2>User Recommended Categories</h2>
+        <!-- New Releases Section -->
+        <div class="grid">
+            <div class="card">
+                <h2>New Releases</h2>
+                <div class="grid">
+                        <% newReleases.albums.items.forEach(album => { %>
+                            <a href="<%=album.external_urls.spotify %>">
+                                <div class="card">
+                                    <img src="<%= album.images[0] ? album.images[0].url : 'https://via.placeholder.com/150' %>" alt="Album Cover">
+                                    <div class="track-info">
+                                        <p><strong><%= album.name %></strong></p>
+                                        <p><%= album.artists.map(artist => artist.name).join(', ') %></p>
+                                    </div>
+                                </div>
+                            </a>
+                        <% }) %>
+                </div>
+            </div>
+
+            <!-- Browse Categories Section -->
             <div class="grid">
-                <% recommendedCategories.items.forEach(category => { %>
-                    <div>
-                        <img src="<%= category.icons[0] ? category.icons[0].url : 'https://via.placeholder.com/150' %>" alt="Category Icon">
-                        <p><strong><%= category.name %></strong></p>
+                <div class="card">
+                    <h2>Browse Categories</h2>
+                    <div class="grid">
+                        <% categories.categories.items.forEach(category => { %>
+                            <a href="<%=category.href%>">
+                                <div class="card">
+                                    <img src="<%= category.icons[0] ? category.icons[0].url : 'https://via.placeholder.com/150' %>" alt="Category Icon">
+                                    <p><strong><%= category.name %></strong></p>
+                                </div>
+                            </a>
+                        <% }) %>
                     </div>
-                <% }) %>
+                </div>
             </div>
         </div>
     </div>
