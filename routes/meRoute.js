@@ -13,7 +13,7 @@ router.route("/")
     const headers = { 'Authorization': `Bearer ${accessToken}` };
     try {
         const response = await axios.get('https://api.spotify.com/v1/me', { headers });
-        res.json(response.data);
+        res.status(200).json(response.data);
     } catch (error) {
         console.error('Error:', error.message);
         if (error) {

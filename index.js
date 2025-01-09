@@ -14,9 +14,11 @@ const { wrapAsync } = require('./utils/utils');
 const User=require("./models/userModel");
 const ExpressError=require("./utils/ExpressError");
 const path=require('path');
+const ejsmate=require("ejs-mate");
 
 
 //routes
+
 const meRouter=require("./routes/meRoute");
 const userRoute=require("./routes/userRoute");
 const playlistRoute=require("./routes/playlistRoute");
@@ -27,6 +29,7 @@ const trackRoute=require("./routes/trackRoute");
 const loginRoute=require("./routes/loginRoute");
 const searchRoute=require("./routes/searchRoutes");
 const requestRoute=require("./routes/requestRoute");
+const profileRouter=require("./routes/profile")
 
 const passport = require('passport');
 const LocalStrategy=require("passport-local");
@@ -67,6 +70,8 @@ app.use("/search", searchRoute);
 app.use("/me/requests",requestRoute);
 app.use("/me", meRouter);
 
+app.use("/profile", profileRouter);
+
 //custom routes
 
 
@@ -74,7 +79,9 @@ app.use("/me", meRouter);
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.engine("ejs",ejsmate);
 app.set("view engine","ejs");
+app.set("views",path.join(__dirname,"views"));
 app.use(express.static(path.join(__dirname,"public/css")));
 app.use(express.static(path.join(__dirname,"public/js")));
 // passport.use(new LocalStrategy(User.authenticate()));
