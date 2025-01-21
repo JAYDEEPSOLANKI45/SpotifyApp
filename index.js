@@ -98,6 +98,9 @@ app.use(express.static(path.join(__dirname,"public/js")));
 //     let {status=500,message="Something broke!"}=err;
 //     res.redirect("/error");
 // });
+app.use("/",isLogined,(req,res)=>{
+    return res.redirect("/profile");
+})
 
 app.use("/logout",isLogined,wrapAsync(async(req,res,next)=>{
     delete req.session.authorizationCode;
