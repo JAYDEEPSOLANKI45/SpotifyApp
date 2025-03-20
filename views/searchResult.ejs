@@ -22,7 +22,7 @@
                     <div class="grid">
                         <% tracks.items.forEach(track => { %>
                             <div class="track-card">
-                                <img src="<%= track.album.images[0] ? track.album.images[0].url : 'https://via.placeholder.com/150' %>" alt="Track Cover">
+                                <img src="<%= track.album.images[0] ? track.album.images[0].url : 'https://static-00.iconduck.com/assets.00/spotify-icon-256x256-58d2zp7j.png' %>" alt="Track Cover">
                                 <div class="track-info">
                                     <strong><%= track.name %></strong>
                                     <p><%= track.artists.map(artist => artist.name).join(', ') %></p>
@@ -40,7 +40,7 @@
                         <div class="grid">
                             <% artists.items.forEach(artist => { %>
                                 <div class="track-card">
-                                    <img src="<%= artist.images[0] ? artist.images[0].url : 'https://via.placeholder.com/150' %>" alt="Artist Picture">
+                                    <img src="<%= artist.images[0] ? artist.images[0].url : 'https://static-00.iconduck.com/assets.00/spotify-icon-256x256-58d2zp7j.png' %>" alt="Artist Picture">
                                     <p><strong><%= artist.name %></strong></p>
                                 </div>
                             <% }) %>
@@ -58,7 +58,7 @@
                     <div class="album-playlist-grid">
                         <% albums.items.forEach(album => { %>
                             <div>
-                                <img src="<%= album.images? album.images[0].url : 'https://images.unsplash.com/photo-1523730205978-59fd1b2965e3?q=80&w=1954&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' %>" alt="Album Cover">
+                                <img src="<%= album.images? album.images[0].url : 'https://static-00.iconduck.com/assets.00/spotify-icon-256x256-58d2zp7j.png' %>" alt="Album Cover">
                                 <p><strong><%= album.name %></strong></p>
                                 <p><%= album.artists.map(artist => artist.name).join(', ') %></p>
                             </div>
@@ -75,7 +75,7 @@
                         <% playlists.items.forEach(playlist => { %>
                             <% if(playlist){ %>
                             <div>
-                                <img src="<%= playlist.images ? playlist.images[0].url : 'https://via.placeholder.com/150' %>" alt="Playlist Cover">
+                                <img src="<%= playlist.images ? playlist.images[0].url : 'https://static-00.iconduck.com/assets.00/spotify-icon-256x256-58d2zp7j.png' %>" alt="Playlist Cover">
                                 <p><strong><%= playlist.name %></strong></p>
                             </div>
                             <% } %>
