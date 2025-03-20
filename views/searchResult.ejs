@@ -1,0 +1,89 @@
+<% layout("./layouts/boilerplate.ejs") %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+
+    </style>
+    <!-- <link rel="stylesheet" href="profile.css"> -->
+</head>
+<body>
+    <div class="container">
+
+        <div class="grid">
+
+            <% if (tracks) {%>
+                <div class="card">
+                    <h2>Tracks</h2>
+                    <div class="grid">
+                        <% tracks.items.forEach(track => { %>
+                            <div class="track-card">
+                                <img src="<%= track.album.images[0] ? track.album.images[0].url : 'https://via.placeholder.com/150' %>" alt="Track Cover">
+                                <div class="track-info">
+                                    <strong><%= track.name %></strong>
+                                    <p><%= track.artists.map(artist => artist.name).join(', ') %></p>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+                <% } %>
+
+                <% if(artists){ %>
+                    <!-- Top Artists -->
+                    <div class="card">
+                        <h2>Artists</h2>
+                        <div class="grid">
+                            <% artists.items.forEach(artist => { %>
+                                <div class="track-card">
+                                    <img src="<%= artist.images[0] ? artist.images[0].url : 'https://via.placeholder.com/150' %>" alt="Artist Picture">
+                                    <p><strong><%= artist.name %></strong></p>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                    <% } %>
+
+            
+            <!-- Top Tracks -->
+            
+            <% if (albums) { %>
+                <div class="card">
+                    <h2>Albums</h2>
+                    <div class="grid">
+                    <div class="album-playlist-grid">
+                        <% albums.items.forEach(album => { %>
+                            <div>
+                                <img src="<%= album.images? album.images[0].url : 'https://images.unsplash.com/photo-1523730205978-59fd1b2965e3?q=80&w=1954&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' %>" alt="Album Cover">
+                                <p><strong><%= album.name %></strong></p>
+                                <p><%= album.artists.map(artist => artist.name).join(', ') %></p>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            <% } %>
+
+            <% if(playlists) { %>
+                <!-- Saved Playlists -->
+                <div class="card">
+                    <h2>Playlists</h2>
+                    <div class="album-playlist-grid">
+                        <% playlists.items.forEach(playlist => { %>
+                            <% if(playlist){ %>
+                            <div>
+                                <img src="<%= playlist.images ? playlist.images[0].url : 'https://via.placeholder.com/150' %>" alt="Playlist Cover">
+                                <p><strong><%= playlist.name %></strong></p>
+                            </div>
+                            <% } %>
+                        <% }) %>
+                    </div>
+                </div>
+                <% } %>
+        </div>
+    </div>
+</body>
+</html>

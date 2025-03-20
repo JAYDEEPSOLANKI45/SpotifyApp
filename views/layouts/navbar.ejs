@@ -11,8 +11,19 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <!-- Keeping space for logo only -->
       </ul>
-      <form class="d-flex ms-auto" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      <form class="d-flex ms-auto" role="search" action="/search">
+        <input class="form-control me-2" type="text" name="q" placeholder="Search" aria-label="Search">
+        <!-- <input type="text" name="type" hidden value="track"> -->
+        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+          <input type="checkbox" class="btn-check" name="artist" id="btncheck1" autocomplete="off">
+          <label class="btn btn-outline-primary" for="btncheck1">artists</label>
+        
+          <!-- <input type="checkbox" class="btn-check" name="playlist" id="btncheck2" autocomplete="off"> -->
+          <!-- <label class="btn btn-outline-primary" for="btncheck2">Playlists</label> -->
+        
+          <input type="checkbox" class="btn-check" name="album" id="btncheck3" autocomplete="off">
+          <label class="btn btn-outline-primary" for="btncheck3">Albums</label>
+        </div>
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
       <ul class="navbar-nav ms-3 mb-2 mb-lg-0">

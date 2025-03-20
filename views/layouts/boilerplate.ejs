@@ -141,10 +141,24 @@ body {
 .track-info strong {
     font-size: 1rem;
 }
+
     </style>
 </head>
 <body>
     <%- include("./navbar.ejs") %>
     <%- body %>
 </body>
+<script>
+    const checkboxes = document.querySelectorAll('.dropdown-menu input[type="checkbox"]');
+    const output = document.getElementById('output');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            const selectedOptions = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+            output.textContent = selectedOptions.length ? selectedOptions.join(', ') : 'None';
+        });
+    });
+</script>
 </html>
