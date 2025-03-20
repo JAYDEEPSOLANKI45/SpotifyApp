@@ -23,7 +23,7 @@ router.get('/', isLogined ,wrapAsync(async (req, res,next) => {
     }
 }));
 
-router.post("/api/auth",(req,res,next)=>{
+router.post("/api/auth",(req,res,next)=>{   
     let model=userModel(req.body)
 })
 

@@ -52,7 +52,6 @@ router.get('/code', wrapAsync(async (req, res,next) => {
         'Authorization': 'Basic ' + Buffer.from(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64')
     };
 
-    try {
         const result = await axios.post("https://accounts.spotify.com/api/token", data, { headers });
         const accessToken = result.data.access_token;
         req.session.accessToken = accessToken;
@@ -67,7 +66,7 @@ router.get('/code', wrapAsync(async (req, res,next) => {
         if(user.length==0)
         {
             //TODO: test the genre part
-            const response = await axios.get(`https://api.spotify.com/v1/me/top/artists?limit=5`, {headers:meHeaders});
+            const response = await axios.get(`https://api.spotify.com/v1/me/top/artists?limit=25`, {headers:meHeaders});
             let genresSet = new Set();
             for (let artist of response.data.items) 
                 { artist.genres.forEach(genre => genresSet.add(genre)); } // Convert the set back to an array if needed let genres = Array.from
@@ -78,9 +77,6 @@ router.get('/code', wrapAsync(async (req, res,next) => {
         }
         console.log(redirectUrl);
         res.redirect(redirectUrl);
-    } catch (error) {
-        return next(new ExpressError(400,"Bad request"));
-    }
 }));
 
 module.exports=router;

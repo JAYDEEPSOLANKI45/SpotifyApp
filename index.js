@@ -30,6 +30,7 @@ const loginRoute=require("./routes/loginRoute");
 const searchRoute=require("./routes/searchRoutes");
 const requestRoute=require("./routes/requestRoute");
 const profileRouter=require("./routes/profile")
+const friendsRouter=require("./routes/friendRoute")
 
 const passport = require('passport');
 const LocalStrategy=require("passport-local");
@@ -69,6 +70,7 @@ app.use("/login",loginRoute);
 app.use("/search", searchRoute);
 app.use("/me/requests",requestRoute);
 app.use("/me", meRouter);
+app.use("/friends",friendsRouter);
 
 app.use("/profile", profileRouter);
 

@@ -1,0 +1,64 @@
+<% layout("./layouts/boilerplate.ejs") %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+
+    </style>
+    <!-- <link rel="stylesheet" href="profile.css"> -->
+</head>
+<body>
+    <div class="container">
+
+        <div class="grid">
+
+            <div class="card">
+                <h2>Friends</h2>
+                <div class="grid">
+                    <% for(let i=0; i< userList.length; i++) { %>
+                        <% if (userList[i].id != currentUser.username) { %>
+                        <div class="track-card">
+                            <img src="<%= userList[i].images.length>0 ? userList[i].images[0].url : 'https://static-00.iconduck.com/assets.00/spotify-icon-256x256-58d2zp7j.png' %>" alt="pfp">
+                            <div class="track-info">
+                                <strong><%= userList[i].display_name %></strong>
+                                <p><%= percentage[i] %></p>
+                                <form action="/me/requests?id=<%= userList[i].id %>&type=friend" method="post">
+                                    <button style="border-radius: 50%;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
+                                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+                                        <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+                                      </svg></button>
+                                </form>
+                            </div>
+                        </div>
+                        <% } %>
+                    <% } %>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Incoming requests</h2>
+                <div class="grid">
+                    <% for(let i=0; i< incoming.length; i++) { %>
+                        <!-- and userList[i].id is not in outgoing requests of current user -->
+                        <% if (incoming[i].id != incoming.username ) { %>
+                        <div class="track-card">
+                            <img src="<%= incoming[i].images.length>0 ? incoming[i].images[0].url : 'https://static-00.iconduck.com/assets.00/spotify-icon-256x256-58d2zp7j.png' %>" alt="pfp">
+                            <div class="track-info">
+                                <strong><%= incoming[i].display_name %></strong>
+                                <p><%= percentage[i] %></p>
+                            </div>
+                        </div>
+                        <% } %>
+                    <% } %>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</body>
+</html>
